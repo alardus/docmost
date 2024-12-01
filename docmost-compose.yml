@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  docmost:
+    image: docmost/docmost:latest
+    depends_on:
+      - db
+      - redis
+    environment:
+      APP_URL: 'your-host-url'
+      APP_SECRET: 'your-app-secret'
+      DATABASE_URL: 'postgresql://docmost:your-db-password@db:5432/docmost?schema=public'
+      REDIS_URL: 'redis://redis:6379'
+      MAIL_DRIVER: 'smtp'
+      MAIL_FROM_NAME: "Docmost"
+      SMTP_HOST: "your-smtp-host"
+      SMTP_PORT: 587
+      SMTP_USERNAME: "your-smtp-username"
+      SMTP_PASSWORD: "your-smtp-password"
+      SMTP_FROM_EMAIL: "your-smtp-from-email"
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - docmost:/app/data/storage
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: docmost
+      POSTGRES_USER: docmost
+      POSTGRES_PASSWORD: your-db-password
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+volumes:
+  docmost:
+  db_data:
+  redis_data:
