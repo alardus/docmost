@@ -32,7 +32,7 @@ db:
 Build the docker container:
 
 ```bash
-docker compose up -d docmost-compose.yml
+docker compose -f docmost-compose.yml up -d
 ```
 
 ## Setup HTTPS 
